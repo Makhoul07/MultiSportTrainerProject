@@ -1,0 +1,28 @@
+# Android
+.gradle/
+**/build/
+local.properties
+*.apk
+*.aab
+
+# Android Studio
+.idea/
+*.iml
+
+# Visual Studio / .NET
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.rsuser
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / local settings
+appsettings.Development.json

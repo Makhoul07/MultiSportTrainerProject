@@ -1,0 +1,161 @@
+package com.example.multisporttrainer;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.example.multisporttrainer.api.ApiService;
+import com.example.multisporttrainer.api.RetrofitClient;
+import com.example.multisporttrainer.models.LatestResultResponse;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class StatisticsFragment extends Fragment {
+
+    private TextView scoreText;
+    private TextView durationText;
+    private TextView accuracyText;
+    private TextView mistakesText;
+    private TextView avgReactionText;
+    private TextView bestReactionText;
+
+    public StatisticsFragment() {
+        // Required empty constructor
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
+        View view = inflater.inflate(R.layout.fragment_statistics, container, false);
+
+        scoreText = view.findViewById(R.id.latestScoreText);
+        durationText = view.findViewById(R.id.latestDurationText);
+        accuracyText = view.findViewById(R.id.latestAccuracyText);
+        mistakesText = view.findViewById(R.id.latestMistakesText);
+        avgReactionText = view.findViewById(R.id.latestAvgReactionText);
+        bestReactionText = view.findViewById(R.id.latestBestReactionText);
+
+        loadLatestResult();
+
+        view.findViewById(R.id.saveResultButton).setOnClickListener(v ->
+                Toast.makeText(getContext(), "Result saved", Toast.LENGTH_SHORT).show()
+        );
+
+        view.findViewById(R.id.retryButton).setOnClickListener(v -> {
+            openFragment(new TrainingFragment());
+            selectBottomNavItem(R.id.nav_training);
+        });
+
+        view.findViewById(R.id.newTrainingButton).setOnClickListener(v -> {
+            openFragment(new TrainingFragment());
+            selectBottomNavItem(R.id.nav_training);
+        });
+
+        view.findViewById(R.id.viewLeaderboardButton).setOnClickListener(v -> {
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new LeaderboardFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        view.findViewById(R.id.viewStatisticsButton).setOnClickListener(v -> {
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new PerformanceStatisticsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        return view;
+    }
+
+    private void loadLatestResult() {
+        if (!SessionManager.isLoggedIn()) {
+            Toast.makeText(getContext(), "No logged in user", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ApiService apiService = RetrofitClient
+                .getInstance()
+                .create(ApiService.class);
+
+        apiService.getLatestResult(SessionManager.loggedInUserId)
+                .enqueue(new Callback<LatestResultResponse>() {
+                    @Override
+                    public void onResponse(
+                            @NonNull Call<LatestResultResponse> call,
+                            @NonNull Response<LatestResultResponse> response
+                    ) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            LatestResultResponse result = response.body();
+
+                            scoreText.setText(String.valueOf(result.getScore()));
+                            durationText.setText(formatDuration(result.getDurationSeconds()));
+                            accuracyText.setText(String.format("%.0f%%", result.getAccuracy()));
+                            mistakesText.setText(String.valueOf(result.getMistakes()));
+                            avgReactionText.setText(String.format("%.1fs", result.getAverageReactionSeconds()));
+                            bestReactionText.setText(String.format("%.1fs", result.getBestReactionSeconds()));
+
+                        } else {
+                            Toast.makeText(
+                                    getContext(),
+                                    "No latest result found",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(
+                            @NonNull Call<LatestResultResponse> call,
+                            @NonNull Throwable t
+                    ) {
+                        Toast.makeText(
+                                getContext(),
+                                "Connection error: " + t.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                });
+    }
+
+    private String formatDuration(int seconds) {
+        int minutes = seconds / 60;
+        int remainingSeconds = seconds % 60;
+        return String.format("%02d:%02d", minutes, remainingSeconds);
+    }
+
+    private void openFragment(Fragment fragment) {
+        requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+    }
+
+    private void selectBottomNavItem(int itemId) {
+        BottomNavigationView bottomNavigationView =
+                requireActivity().findViewById(R.id.bottom_navigation);
+
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(itemId);
+        }
+    }
+}
