@@ -450,47 +450,6 @@
 
             </LinearLayout>
 
-            <!-- Setup Test -->
-            <LinearLayout
-                android:id="@+id/setupTestCard"
-                android:layout_width="0dp"
-                android:layout_height="112dp"
-                android:layout_columnWeight="1"
-                android:layout_marginStart="7dp"
-                android:background="@drawable/bg_card"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/bg_icon_box"
-                    android:padding="9dp"
-                    android:src="@drawable/ic_cones"
-                    app:tint="@color/primary_blue" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Setup Test"
-                    android:textColor="@color/text_dark"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Check IoT cones"
-                    android:textColor="@color/text_gray"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
-
         </GridLayout>
 
     </LinearLayout>

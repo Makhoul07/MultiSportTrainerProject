@@ -22,25 +22,21 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <!-- Status line: Connecting... / Training Started! / ✓ Correct! / ✗ Wrong! -->
         <TextView
+            android:id="@+id/txt_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:text="Session Active"
+            android:text="Connecting..."
             android:textColor="@color/text_dark"
-            android:textSize="32sp"
+            android:textSize="26sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Follow the green cone and avoid the red cone."
-            android:textColor="@color/text_gray"
-            android:textSize="15sp" />
-
+        <!-- Cone instruction card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="190dp"
+            android:layout_height="200dp"
             android:layout_marginTop="24dp"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="24dp"
@@ -52,40 +48,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
+                <!-- Large, bold current-cone instruction: "Hit Cone X!" -->
                 <TextView
+                    android:id="@+id/txt_cone_instruction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="GO TO"
-                    android:textColor="@color/text_gray"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txt_green_cone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Cone 4"
+                    android:gravity="center"
+                    android:text="Waiting..."
                     android:textColor="@color/primary_blue"
-                    android:textSize="46sp"
+                    android:textSize="40sp"
                     android:textStyle="bold" />
 
+                <!-- "Avoid Cone Y!" - hidden unless a distraction (red light) is active -->
                 <TextView
-                    android:id="@+id/txt_red_cone"
+                    android:id="@+id/txt_avoid_cone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="Avoid Cone 2"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Avoid Cone Y!"
                     android:textColor="#D62828"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Timer + Score row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -108,20 +102,20 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="Timer"
                         android:textColor="@color/text_gray"
-                        android:textSize="14sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/txt_timer"
-                        android:text="00:24"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00:00"
                         android:textColor="@color/text_dark"
                         android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -143,158 +137,26 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="Score"
                         android:textColor="@color/text_gray"
-                        android:textSize="14sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/txt_score"
-                        android:text="30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
                         android:textColor="@color/primary_blue"
                         android:textSize="30sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="22dp"
-            app:cardElevation="3dp"
-            app:strokeColor="@color/card_border"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:text="Route Progress"
-                    android:textColor="@color/text_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/txt_route_progress"
-                    android:layout_marginTop="10dp"
-                    android:text="1 → 4 → 5 → 2 → 3"
-                    android:textColor="@color/primary_blue"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <ProgressBar
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:layout_marginTop="18dp"
-                    android:max="5"
-                    android:progress="3"
-                    android:progressTint="@color/primary_blue" />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:orientation="horizontal">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="96dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="20dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:text="Mistakes"
-                        android:textColor="@color/text_gray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:text="1"
-                        android:textColor="#D62828"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="96dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="20dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:text="Round"
-                        android:textColor="@color/text_gray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:text="2 / 3"
-                        android:textColor="@color/text_dark"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_finish_training"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginTop="28dp"
-            android:text="Finish Training"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/primary_blue"
-            app:cornerRadius="20dp" />
 
     </LinearLayout>
 

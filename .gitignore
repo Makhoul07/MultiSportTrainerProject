@@ -26,3 +26,9 @@ Thumbs.db
 
 # Secrets / local settings
 appsettings.Development.json
+
+# Python / IoT
+IoT/venv/
+**/__pycache__/
+*.pyc
+IoT/training_history.json

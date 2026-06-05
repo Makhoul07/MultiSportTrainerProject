@@ -56,6 +56,9 @@ public class LoginFragment extends Fragment {
             ((AuthActivity) requireActivity()).loadFragment(new RegisterFragment());
         });
 
+        //test
+        //Toast.makeText(getContext(), "LoginFragment loaded", Toast.LENGTH_LONG).show();
+
         return view;
     }
 

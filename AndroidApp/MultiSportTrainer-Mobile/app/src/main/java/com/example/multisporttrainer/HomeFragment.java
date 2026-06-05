@@ -70,11 +70,6 @@ public class HomeFragment extends Fragment {
             selectBottomNavItem(R.id.nav_history);
         });
 
-        view.findViewById(R.id.setupTestCard).setOnClickListener(v -> {
-            openFragment(new SetupTestFragment());
-            selectBottomNavItem(R.id.nav_training);
-        });
-
         return view;
     }
 
