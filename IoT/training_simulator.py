@@ -44,6 +44,24 @@ def get_rounds_from_difficulty(difficulty):
         return 5
 
 
+def normalize_difficulty(value):
+    """Map any-casing/whitespace difficulty to a valid DIFFICULTY_SETTINGS key.
+
+    The app sends lowercase, but main_controller.py forwards raw keyboard input
+    ("Medium", "HARD", " hard ") straight through. An unmatched key would raise
+    KeyError inside generate_distraction_cone -- and since that happens before
+    the cone_activation is published, it silently kills the whole round (no
+    green and no red light). Default to "medium" so distractions still fire on
+    an unrecognized value.
+    """
+    normalized = str(value).strip().lower()
+
+    if normalized in DIFFICULTY_SETTINGS:
+        return normalized
+
+    return "medium"
+
+
 def generate_real_cone_route(rounds):
     return [
         random.choice(REAL_CONES)
@@ -187,7 +205,7 @@ def start_training(data):
         # Use the exact sequence the player built in the app. Keep only real
         # cones (1-3); the app already enforces a minimum of 3 taps.
         route = [c for c in data.get("route", []) if c in REAL_CONES]
-        difficulty = data.get("difficulty", "medium")
+        difficulty = normalize_difficulty(data.get("difficulty", "medium"))
 
         if len(route) < 3:
             print("Custom route needs at least 3 real cones (1-3). Aborting.")
@@ -196,7 +214,7 @@ def start_training(data):
         rounds = len(route)
 
     elif mode == "generated_route":
-        difficulty = data.get("difficulty", "medium")
+        difficulty = normalize_difficulty(data.get("difficulty", "medium"))
         rounds = get_rounds_from_difficulty(difficulty)
         route = generate_real_cone_route(rounds)
 
