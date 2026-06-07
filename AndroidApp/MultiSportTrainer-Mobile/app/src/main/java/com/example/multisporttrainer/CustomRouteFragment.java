@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ import com.example.multisporttrainer.api.ApiService;
 import com.example.multisporttrainer.api.RetrofitClient;
 import com.example.multisporttrainer.models.SaveRouteRequest;
 import com.example.multisporttrainer.models.SaveRouteResponse;
+import com.example.multisporttrainer.models.StartTrainingRequest;
+import com.example.multisporttrainer.models.StartTrainingResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 
@@ -25,7 +28,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Custom route builder. The player taps cones 1-3 in any order to build a
+ * sequence, picks a difficulty, then continues. On continue we create the
+ * backend training session (with the chosen difficulty + tap count), save the
+ * route, and move to the live MQTT-driven session.
+ */
 public class CustomRouteFragment extends Fragment {
+
+    private static final int MIN_TAPS = 3;
 
     private final List<Integer> selectedRoute = new ArrayList<>();
 
@@ -33,6 +44,7 @@ public class CustomRouteFragment extends Fragment {
     private MaterialButton undoLastButton;
     private MaterialButton clearRouteButton;
     private MaterialButton continueButton;
+    private RadioGroup difficultyRadioGroup;
 
     public CustomRouteFragment() {
         // Required empty public constructor
@@ -52,18 +64,15 @@ public class CustomRouteFragment extends Fragment {
         selectedRouteText = view.findViewById(R.id.txt_selected_route);
         undoLastButton = view.findViewById(R.id.btn_undo_last);
         clearRouteButton = view.findViewById(R.id.btn_clear_route);
+        difficultyRadioGroup = view.findViewById(R.id.difficultyRadioGroup);
 
         MaterialCardView cone1 = view.findViewById(R.id.card_cone_1);
         MaterialCardView cone2 = view.findViewById(R.id.card_cone_2);
         MaterialCardView cone3 = view.findViewById(R.id.card_cone_3);
-        MaterialCardView cone4 = view.findViewById(R.id.card_cone_4);
-        MaterialCardView cone5 = view.findViewById(R.id.card_cone_5);
 
         cone1.setOnClickListener(v -> addConeToRoute(1));
         cone2.setOnClickListener(v -> addConeToRoute(2));
         cone3.setOnClickListener(v -> addConeToRoute(3));
-        cone4.setOnClickListener(v -> addConeToRoute(4));
-        cone5.setOnClickListener(v -> addConeToRoute(5));
 
         undoLastButton.setOnClickListener(v -> undoLastCone());
         clearRouteButton.setOnClickListener(v -> clearRoute());
@@ -76,7 +85,7 @@ public class CustomRouteFragment extends Fragment {
                     .commit();
         });
 
-        continueButton.setOnClickListener(v -> validateAndSaveRoute());
+        continueButton.setOnClickListener(v -> validateAndStart());
 
         updateRouteText();
         updateActionButtons();
@@ -112,81 +121,80 @@ public class CustomRouteFragment extends Fragment {
         updateActionButtons();
     }
 
-    private void validateAndSaveRoute() {
+    private String selectedDifficulty() {
+        int checkedId = difficultyRadioGroup.getCheckedRadioButtonId();
+        if (checkedId == R.id.radioEasy) {
+            return "Easy";
+        } else if (checkedId == R.id.radioHard) {
+            return "Hard";
+        }
+        return "Medium";
+    }
+
+    private void validateAndStart() {
         if (!SessionManager.isLoggedIn()) {
             Toast.makeText(getContext(), "Please login first", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (CurrentTrainingData.sessionId == -1) {
-            Toast.makeText(getContext(), "Training session was not created", Toast.LENGTH_SHORT).show();
+        if (selectedRoute.size() < MIN_TAPS) {
+            Toast.makeText(
+                    getContext(),
+                    "Tap at least " + MIN_TAPS + " cones to build a route",
+                    Toast.LENGTH_SHORT
+            ).show();
             return;
         }
 
-        if (selectedRoute.isEmpty()) {
-            Toast.makeText(getContext(), "Please select at least one cone", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String difficulty = selectedDifficulty();
+
+        // Everything the live MQTT session needs is fixed here, before we navigate.
+        CurrentTrainingData.routeType = "Custom";
+        CurrentTrainingData.difficulty = difficulty;
+        CurrentTrainingData.conesCount = 3;
+        CurrentTrainingData.rounds = selectedRoute.size();
+        CurrentTrainingData.distractionsEnabled = !difficulty.equalsIgnoreCase("Easy");
 
         CurrentTrainingData.coneSequence.clear();
         CurrentTrainingData.coneSequence.addAll(selectedRoute);
-        CurrentTrainingData.routeType = "Custom";
 
-        saveRouteToBackend();
+        createSessionThenSaveRoute();
     }
 
-    private void saveRouteToBackend() {
-        continueButton.setEnabled(false);
-        continueButton.setText("Saving...");
+    private void createSessionThenSaveRoute() {
+        setBusy(true, "Starting...");
 
-        SaveRouteRequest request = new SaveRouteRequest(
+        StartTrainingRequest request = new StartTrainingRequest(
                 SessionManager.loggedInUserId,
-                CurrentTrainingData.sessionId,
                 CurrentTrainingData.routeType,
-                new ArrayList<>(CurrentTrainingData.coneSequence)
+                CurrentTrainingData.difficulty,
+                CurrentTrainingData.trainingType,
+                CurrentTrainingData.conesCount,
+                CurrentTrainingData.rounds,
+                CurrentTrainingData.distractionsEnabled
         );
 
-        ApiService apiService = RetrofitClient
-                .getInstance()
-                .create(ApiService.class);
-
-        apiService.saveRoute(request).enqueue(new Callback<SaveRouteResponse>() {
+        api().startTraining(request).enqueue(new Callback<StartTrainingResponse>() {
             @Override
             public void onResponse(
-                    @NonNull Call<SaveRouteResponse> call,
-                    @NonNull Response<SaveRouteResponse> response
+                    @NonNull Call<StartTrainingResponse> call,
+                    @NonNull Response<StartTrainingResponse> response
             ) {
-                continueButton.setEnabled(true);
-                continueButton.setText("Continue");
-
                 if (response.isSuccessful() && response.body() != null) {
-                    CurrentTrainingData.routeSaved = true;
-
-                    Toast.makeText(
-                            getContext(),
-                            "Route saved successfully",
-                            Toast.LENGTH_SHORT
-                    ).show();
-
-                    openSetupTest();
-
+                    CurrentTrainingData.sessionId = response.body().getSessionId();
+                    saveRouteToBackend();
                 } else {
-                    Toast.makeText(
-                            getContext(),
-                            "Failed to save route",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    setBusy(false, "Continue");
+                    Toast.makeText(getContext(), "Failed to start training", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(
-                    @NonNull Call<SaveRouteResponse> call,
+                    @NonNull Call<StartTrainingResponse> call,
                     @NonNull Throwable t
             ) {
-                continueButton.setEnabled(true);
-                continueButton.setText("Continue");
-
+                setBusy(false, "Continue");
                 Toast.makeText(
                         getContext(),
                         "Connection error: " + t.getMessage(),
@@ -196,13 +204,67 @@ public class CustomRouteFragment extends Fragment {
         });
     }
 
-    private void openSetupTest() {
+    private void saveRouteToBackend() {
+        setBusy(true, "Saving...");
+
+        SaveRouteRequest request = new SaveRouteRequest(
+                SessionManager.loggedInUserId,
+                CurrentTrainingData.sessionId,
+                CurrentTrainingData.routeType,
+                new ArrayList<>(CurrentTrainingData.coneSequence)
+        );
+
+        api().saveRoute(request).enqueue(new Callback<SaveRouteResponse>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<SaveRouteResponse> call,
+                    @NonNull Response<SaveRouteResponse> response
+            ) {
+                setBusy(false, "Continue");
+
+                if (response.isSuccessful() && response.body() != null) {
+                    CurrentTrainingData.routeSaved = true;
+                    Toast.makeText(getContext(), "Route saved", Toast.LENGTH_SHORT).show();
+                    openLiveTraining();
+                } else {
+                    Toast.makeText(getContext(), "Failed to save route", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<SaveRouteResponse> call,
+                    @NonNull Throwable t
+            ) {
+                setBusy(false, "Continue");
+                Toast.makeText(
+                        getContext(),
+                        "Connection error: " + t.getMessage(),
+                        Toast.LENGTH_LONG
+                ).show();
+            }
+        });
+    }
+
+    private ApiService api() {
+        return RetrofitClient.getInstance().create(ApiService.class);
+    }
+
+    private void openLiveTraining() {
         requireActivity()
                 .getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, new SetupTestFragment())
+                .replace(R.id.fragment_container, new LiveTrainingFragment())
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void setBusy(boolean busy, String label) {
+        if (continueButton == null) {
+            return;
+        }
+        continueButton.setEnabled(!busy);
+        continueButton.setText(label);
     }
 
     private void updateRouteText() {

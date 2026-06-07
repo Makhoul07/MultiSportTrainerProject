@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,21 +13,18 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.multisporttrainer.api.ApiService;
-import com.example.multisporttrainer.api.RetrofitClient;
-import com.example.multisporttrainer.models.StartTrainingRequest;
-import com.example.multisporttrainer.models.StartTrainingResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
+/**
+ * Entry point of the training flow. Only chooses the route mode (Custom vs
+ * Generated) and navigates to the matching route screen. Difficulty and the
+ * backend training session are now owned by the route screens, since both
+ * depend on choices the player makes there.
+ */
 public class TrainingFragment extends Fragment {
 
     private boolean isCustomSelected = true;
-    private String selectedDifficulty = "Medium";
 
     private MaterialCardView customCard;
     private MaterialCardView generatedCard;
@@ -57,105 +53,32 @@ public class TrainingFragment extends Fragment {
 
         continueButton = view.findViewById(R.id.btn_continue_setup);
 
-        RadioGroup difficultyRadioGroup = view.findViewById(R.id.difficultyRadioGroup);
-
         selectCustomRoute();
 
-        difficultyRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.radioEasy) {
-                selectedDifficulty = "Easy";
-            } else if (checkedId == R.id.radioMedium) {
-                selectedDifficulty = "Medium";
-            } else if (checkedId == R.id.radioHard) {
-                selectedDifficulty = "Hard";
-            } else {
-                selectedDifficulty = "Medium";
-            }
-        });
-
         customCard.setOnClickListener(v -> selectCustomRoute());
-
         generatedCard.setOnClickListener(v -> selectGeneratedRoute());
 
-        continueButton.setOnClickListener(v -> startTrainingSession());
+        continueButton.setOnClickListener(v -> proceedToRouteScreen());
 
         return view;
     }
 
-    private void startTrainingSession() {
+    private void proceedToRouteScreen() {
         if (!SessionManager.isLoggedIn()) {
             Toast.makeText(getContext(), "Please login first", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Reset all training state; difficulty/route/session are set on the next screen.
         CurrentTrainingData.clear();
-
         CurrentTrainingData.routeType = isCustomSelected ? "Custom" : "Generated";
-        CurrentTrainingData.difficulty = selectedDifficulty;
         CurrentTrainingData.trainingType = "Football Dribbling";
-        CurrentTrainingData.conesCount = 4;
-        CurrentTrainingData.rounds = 3;
-        CurrentTrainingData.distractionsEnabled = true;
 
-        continueButton.setEnabled(false);
-        continueButton.setText("Starting...");
-
-        StartTrainingRequest request = new StartTrainingRequest(
-                SessionManager.loggedInUserId,
-                CurrentTrainingData.routeType,
-                CurrentTrainingData.difficulty,
-                CurrentTrainingData.trainingType,
-                CurrentTrainingData.conesCount,
-                CurrentTrainingData.rounds,
-                CurrentTrainingData.distractionsEnabled
-        );
-
-        ApiService apiService = RetrofitClient
-                .getInstance()
-                .create(ApiService.class);
-
-        apiService.startTraining(request).enqueue(new Callback<StartTrainingResponse>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<StartTrainingResponse> call,
-                    @NonNull Response<StartTrainingResponse> response
-            ) {
-                continueButton.setEnabled(true);
-                continueButton.setText("CONTINUE");
-
-                if (response.isSuccessful() && response.body() != null) {
-                    CurrentTrainingData.sessionId = response.body().getSessionId();
-
-                    if (isCustomSelected) {
-                        openFragment(new CustomRouteFragment());
-                    } else {
-                        openFragment(new GeneratedRouteFragment());
-                    }
-
-                } else {
-                    Toast.makeText(
-                            getContext(),
-                            "Failed to start training",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<StartTrainingResponse> call,
-                    @NonNull Throwable t
-            ) {
-                continueButton.setEnabled(true);
-                continueButton.setText("CONTINUE");
-
-                Toast.makeText(
-                        getContext(),
-                        "Connection error: " + t.getMessage(),
-                        Toast.LENGTH_LONG
-                ).show();
-            }
-        });
+        if (isCustomSelected) {
+            openFragment(new CustomRouteFragment());
+        } else {
+            openFragment(new GeneratedRouteFragment());
+        }
     }
 
     private void openFragment(Fragment fragment) {

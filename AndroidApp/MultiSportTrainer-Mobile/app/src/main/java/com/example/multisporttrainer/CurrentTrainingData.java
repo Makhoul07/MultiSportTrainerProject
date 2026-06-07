@@ -11,7 +11,7 @@ public class CurrentTrainingData {
     public static String difficulty = "Medium";
     public static String trainingType = "Football Dribbling";
 
-    public static int conesCount = 4;
+    public static int conesCount = 3;
     public static int rounds = 3;
     public static boolean distractionsEnabled = true;
 

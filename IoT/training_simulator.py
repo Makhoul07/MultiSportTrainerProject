@@ -184,18 +184,25 @@ def start_training(data):
     user_id = data.get("user_id", -1)
 
     if mode == "custom_route":
-        rounds = int(data.get("rounds", 6))
-        difficulty = "medium"
+        # Use the exact sequence the player built in the app. Keep only real
+        # cones (1-3); the app already enforces a minimum of 3 taps.
+        route = [c for c in data.get("route", []) if c in REAL_CONES]
+        difficulty = data.get("difficulty", "medium")
+
+        if len(route) < 3:
+            print("Custom route needs at least 3 real cones (1-3). Aborting.")
+            return
+
+        rounds = len(route)
 
     elif mode == "generated_route":
         difficulty = data.get("difficulty", "medium")
         rounds = get_rounds_from_difficulty(difficulty)
+        route = generate_real_cone_route(rounds)
 
     else:
         print("Invalid mode received")
         return
-
-    route = generate_real_cone_route(rounds)
 
     current_session = {
         "session_id": session_id,

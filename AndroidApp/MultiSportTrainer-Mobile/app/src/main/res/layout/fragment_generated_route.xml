@@ -57,236 +57,74 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sharp direction changes and reaction challenges generated for your drill."
+            android:text="The cones generate their own route automatically. Just pick a difficulty and go."
             android:textColor="@color/text_gray"
             android:textSize="15sp" />
 
-        <com.google.android.material.card.MaterialCardView
+        <!-- DIFFICULTY -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Difficulty"
+            android:textColor="@color/text_dark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Controls route length, distractions and penalties."
+            android:textColor="@color/text_gray"
+            android:textSize="13sp" />
+
+        <RadioGroup
+            android:id="@+id/difficultyRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="22dp"
-            app:cardElevation="3dp"
-            app:strokeColor="@color/card_border"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Session Specs"
-                    android:textColor="@color/text_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:columnCount="2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:text="Training\nAgility"
-                        android:textColor="@color/text_dark"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:text="Intensity\nMedium"
-                        android:textColor="@color/text_dark"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:layout_marginTop="18dp"
-                        android:text="Layout\n4 Cones"
-                        android:textColor="@color/text_dark"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:layout_marginTop="18dp"
-                        android:text="Rounds\n3 Rounds"
-                        android:textColor="@color/text_dark"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                </GridLayout>
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="22dp"
-            app:cardElevation="3dp"
-            app:strokeColor="@color/card_border"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Visual Route"
-                    android:textColor="@color/text_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txt_generated_route"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/light_blue"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="6dp"
-                    android:text="4 → 1 → 2 → 3"
-                    android:textColor="@color/primary_blue"
-                    android:textStyle="bold" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="210dp"
-                    android:layout_marginTop="18dp"
-                    android:background="@color/app_background"
-                    android:padding="12dp">
-
-                    <TextView
-                        android:id="@+id/visual_top_cone"
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:layout_gravity="top|center_horizontal"
-                        android:background="@drawable/bg_icon_box"
-                        android:gravity="center"
-                        android:text="4"
-                        android:textColor="@color/primary_blue"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/visual_left_cone"
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:layout_gravity="center|start"
-                        android:background="@drawable/bg_icon_box"
-                        android:gravity="center"
-                        android:text="1"
-                        android:textColor="@color/primary_blue"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/visual_center_cone"
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_icon_box"
-                        android:gravity="center"
-                        android:text="2"
-                        android:textColor="@color/primary_blue"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                        <TextView
-                        android:id="@+id/visual_right_cone"
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:layout_gravity="center|end"
-                        android:background="@drawable/bg_icon_box"
-                        android:gravity="center"
-                        android:text="3 "
-                        android:textColor="@color/primary_blue"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/visual_bottom_cone"
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:layout_gravity="bottom|center_horizontal"
-                        android:background="@drawable/bg_icon_box"
-                        android:gravity="center"
-                        android:text=""
-                        android:textColor="@color/primary_blue"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:visibility="invisible" />
-
-                </FrameLayout>
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_regenerate_route"
+            <RadioButton
+                android:id="@+id/radioEasy"
                 android:layout_width="0dp"
-                android:layout_height="58dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Regenerate"
-                android:textAllCaps="false"
-                android:textColor="@color/primary_blue"
-                android:textStyle="bold"
-                app:backgroundTint="@color/white"
-                app:cornerRadius="18dp"
-                app:strokeColor="@color/primary_blue"
-                app:strokeWidth="2dp" />
+                android:buttonTint="@color/primary_blue"
+                android:text="Easy"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_accept_route"
+            <RadioButton
+                android:id="@+id/radioMedium"
                 android:layout_width="0dp"
-                android:layout_height="58dp"
-                android:layout_marginStart="8dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Accept Route"
-                android:textAllCaps="false"
-                android:textColor="@color/primary_blue"
-                android:textStyle="bold"
-                app:backgroundTint="@color/white"
-                app:cornerRadius="18dp"
-                app:strokeColor="@color/primary_blue"
-                app:strokeWidth="2dp" />
+                android:buttonTint="@color/primary_blue"
+                android:checked="true"
+                android:text="Medium"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp" />
 
-        </LinearLayout>
+            <RadioButton
+                android:id="@+id/radioHard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/primary_blue"
+                android:text="Hard"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp" />
+
+        </RadioGroup>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_generated_to_setup"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_marginTop="18dp"
-            android:text="Continue to Setup Test"
+            android:layout_marginTop="28dp"
+            android:text="Continue"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="18sp"

@@ -16,9 +16,9 @@ TOPIC_SETUP = "multisport/trainer/setup"
 # SYSTEM CONFIGURATION
 # =========================
 
-CONE_COUNT = 5
+CONE_COUNT = 3
 
-CONES = [1, 2, 3, 4, 5]
+CONES = [1, 2, 3]
 
 SPORT_TYPES = [
     "football",
@@ -54,14 +54,14 @@ DIFFICULTY_SETTINGS = {
     },
 
     "medium": {
-        "route_length": 4,
+        "route_length": 3,
         "step_delay": 2.0,
         "distraction_chance": 0.25,
         "wrong_penalty": 4
     },
 
     "hard": {
-        "route_length": 5,
+        "route_length": 3,
         "step_delay": 1.5,
         "distraction_chance": 0.45,
         "wrong_penalty": 6
