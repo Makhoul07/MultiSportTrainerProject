@@ -47,10 +47,6 @@ public class StatisticsFragment extends Fragment {
 
         loadLatestResult();
 
-        view.findViewById(R.id.saveResultButton).setOnClickListener(v ->
-                Toast.makeText(getContext(), "Result saved", Toast.LENGTH_SHORT).show()
-        );
-
         view.findViewById(R.id.retryButton).setOnClickListener(v -> {
             openFragment(new TrainingFragment());
             selectBottomNavItem(R.id.nav_training);

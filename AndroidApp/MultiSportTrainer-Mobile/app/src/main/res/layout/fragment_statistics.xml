@@ -227,24 +227,12 @@
 
         </LinearLayout>
 
-        <!-- SAVE RESULT BUTTON -->
-        <Button
-            android:id="@+id/saveResultButton"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="@color/primary_blue"
-            android:text="SAVE RESULT"
-            android:textColor="@android:color/white"
-            android:textSize="11sp"
-            android:textStyle="bold" />
-
         <!-- RETRY BUTTON -->
         <Button
             android:id="@+id/retryButton"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:backgroundTint="@android:color/white"
             android:text="RETRY"
             android:textColor="@color/primary_blue"

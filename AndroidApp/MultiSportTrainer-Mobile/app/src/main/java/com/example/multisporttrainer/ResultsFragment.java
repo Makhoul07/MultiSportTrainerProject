@@ -2,7 +2,6 @@ package com.example.multisporttrainer;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -10,15 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.multisporttrainer.api.ApiService;
-import com.example.multisporttrainer.api.RetrofitClient;
-import com.example.multisporttrainer.models.SaveResultRequest;
-import com.example.multisporttrainer.models.SaveResultResponse;
 import com.google.android.material.button.MaterialButton;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ResultsFragment extends Fragment {
 
@@ -55,7 +46,6 @@ public class ResultsFragment extends Fragment {
         viewHistoryButton = view.findViewById(R.id.btn_view_history);
 
         showCurrentResultData();
-        saveResultAutomatically();
 
         newTrainingButton.setOnClickListener(v -> {
             CurrentTrainingData.clear();
@@ -102,52 +92,6 @@ public class ResultsFragment extends Fragment {
                 + " cones. Keep training to improve accuracy and reduce mistakes.";
 
         resultInsightText.setText(insight);
-    }
-
-    private void saveResultAutomatically() {
-        // Results are persisted silently in the background. The user never sees a
-        // save action or any save-related message — only their results and the
-        // three navigation buttons.
-        if (CurrentTrainingData.resultSaved) {
-            return;
-        }
-
-        if (!SessionManager.isLoggedIn() || CurrentTrainingData.sessionId == -1) {
-            return;
-        }
-
-        SaveResultRequest request = new SaveResultRequest(
-                CurrentTrainingData.sessionId,
-                SessionManager.loggedInUserId,
-                CurrentTrainingData.score,
-                CurrentTrainingData.accuracy,
-                CurrentTrainingData.mistakes,
-                CurrentTrainingData.durationSeconds
-        );
-
-        ApiService apiService = RetrofitClient
-                .getInstance()
-                .create(ApiService.class);
-
-        apiService.saveResult(request).enqueue(new Callback<SaveResultResponse>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<SaveResultResponse> call,
-                    @NonNull Response<SaveResultResponse> response
-            ) {
-                if (response.isSuccessful() && response.body() != null) {
-                    CurrentTrainingData.resultSaved = true;
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<SaveResultResponse> call,
-                    @NonNull Throwable t
-            ) {
-                // Save failed; intentionally silent — no user-facing message.
-            }
-        });
     }
 
     private String formatDuration(int seconds) {
