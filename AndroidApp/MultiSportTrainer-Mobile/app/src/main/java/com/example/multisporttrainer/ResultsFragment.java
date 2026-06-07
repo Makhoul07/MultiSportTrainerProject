@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.multisporttrainer.api.ApiService;
 import com.example.multisporttrainer.api.RetrofitClient;
@@ -106,17 +105,14 @@ public class ResultsFragment extends Fragment {
     }
 
     private void saveResultAutomatically() {
+        // Results are persisted silently in the background. The user never sees a
+        // save action or any save-related message — only their results and the
+        // three navigation buttons.
         if (CurrentTrainingData.resultSaved) {
             return;
         }
 
-        if (!SessionManager.isLoggedIn()) {
-            Toast.makeText(getContext(), "Please login first", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (CurrentTrainingData.sessionId == -1) {
-            Toast.makeText(getContext(), "No active training session found", Toast.LENGTH_SHORT).show();
+        if (!SessionManager.isLoggedIn() || CurrentTrainingData.sessionId == -1) {
             return;
         }
 
@@ -141,19 +137,6 @@ public class ResultsFragment extends Fragment {
             ) {
                 if (response.isSuccessful() && response.body() != null) {
                     CurrentTrainingData.resultSaved = true;
-
-                    Toast.makeText(
-                            getContext(),
-                            "Result saved successfully",
-                            Toast.LENGTH_SHORT
-                    ).show();
-
-                } else {
-                    Toast.makeText(
-                            getContext(),
-                            "Failed to save result",
-                            Toast.LENGTH_SHORT
-                    ).show();
                 }
             }
 
@@ -162,11 +145,7 @@ public class ResultsFragment extends Fragment {
                     @NonNull Call<SaveResultResponse> call,
                     @NonNull Throwable t
             ) {
-                Toast.makeText(
-                        getContext(),
-                        "Connection error: " + t.getMessage(),
-                        Toast.LENGTH_LONG
-                ).show();
+                // Save failed; intentionally silent — no user-facing message.
             }
         });
     }

@@ -171,19 +171,36 @@
 
         </LinearLayout>
 
-        <!-- STATS CARDS -->
-        <LinearLayout
+        <!-- STATS: loading / empty status message -->
+        <TextView
+            android:id="@+id/homeStatsMessage"
             android:layout_width="match_parent"
-            android:layout_height="92dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:orientation="horizontal">
+            android:background="@drawable/bg_card"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="Loading your latest session…"
+            android:textColor="@color/text_gray"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
-            <!-- Sessions -->
+        <!-- STATS: latest session (score / accuracy / mistakes / duration) -->
+        <GridLayout
+            android:id="@+id/homeStatsCards"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:columnCount="2"
+            android:visibility="gone">
+
+            <!-- Score -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="92dp"
+                android:layout_columnWeight="1"
                 android:layout_marginEnd="7dp"
-                android:layout_weight="1"
+                android:layout_marginBottom="14dp"
                 android:background="@drawable/bg_card"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
@@ -192,73 +209,30 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sessions"
+                    android:text="Score"
                     android:textColor="@color/text_gray"
                     android:textSize="11sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/homeScoreText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="18"
+                    android:text="0"
                     android:textColor="@color/primary_blue"
                     android:textSize="25sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="+3 this week"
-                    android:textColor="@color/text_gray"
-                    android:textSize="9sp" />
-
-            </LinearLayout>
-
-            <!-- Best -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_card"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:padding="13dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Best Score"
-                    android:textColor="@color/text_gray"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="920"
-                    android:textColor="@color/primary_blue"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="personal best"
-                    android:textColor="@color/text_gray"
-                    android:textSize="9sp" />
 
             </LinearLayout>
 
             <!-- Accuracy -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="92dp"
+                android:layout_columnWeight="1"
                 android:layout_marginStart="7dp"
-                android:layout_weight="1"
+                android:layout_marginBottom="14dp"
                 android:background="@drawable/bg_card"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
@@ -273,24 +247,80 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/homeAccuracyText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="87%"
+                    android:text="0%"
                     android:textColor="@color/primary_blue"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
+            </LinearLayout>
+
+            <!-- Mistakes -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="92dp"
+                android:layout_columnWeight="1"
+                android:layout_marginEnd="7dp"
+                android:background="@drawable/bg_card"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="13dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="keep pushing"
+                    android:text="Mistakes"
                     android:textColor="@color/text_gray"
-                    android:textSize="9sp" />
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/homeMistakesText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="0"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
-        </LinearLayout>
+            <!-- Duration -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="92dp"
+                android:layout_columnWeight="1"
+                android:layout_marginStart="7dp"
+                android:background="@drawable/bg_card"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="13dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Duration"
+                    android:textColor="@color/text_gray"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/homeDurationText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="00:00"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </GridLayout>
 
         <!-- QUICK ACCESS TITLE -->
         <LinearLayout

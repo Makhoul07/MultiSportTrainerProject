@@ -16,12 +16,28 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.multisporttrainer.api.ApiService;
+import com.example.multisporttrainer.api.RetrofitClient;
+import com.example.multisporttrainer.models.LatestResultResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
     private TextView welcomeText;
     private PopupWindow currentPopupWindow;
+
+    private TextView homeStatsMessage;
+    private View homeStatsCards;
+    private TextView homeScoreText;
+    private TextView homeAccuracyText;
+    private TextView homeMistakesText;
+    private TextView homeDurationText;
 
     public HomeFragment() {
         // Required empty constructor
@@ -39,6 +55,15 @@ public class HomeFragment extends Fragment {
         // Welcome text with real logged-in user
         welcomeText = view.findViewById(R.id.welcomeText);
         updateWelcomeText();
+
+        // Today's Performance: real latest-session data from the backend
+        homeStatsMessage = view.findViewById(R.id.homeStatsMessage);
+        homeStatsCards = view.findViewById(R.id.homeStatsCards);
+        homeScoreText = view.findViewById(R.id.homeScoreText);
+        homeAccuracyText = view.findViewById(R.id.homeAccuracyText);
+        homeMistakesText = view.findViewById(R.id.homeMistakesText);
+        homeDurationText = view.findViewById(R.id.homeDurationText);
+        loadTodaysPerformance();
 
         // Top-right profile icon opens sidebar
         view.findViewById(R.id.profileIcon).setOnClickListener(v -> showProfileSidebar(view));
@@ -78,6 +103,72 @@ public class HomeFragment extends Fragment {
         String firstName = getFirstName(fullName);
 
         welcomeText.setText("Welcome back, " + firstName);
+    }
+
+    private void loadTodaysPerformance() {
+        if (!SessionManager.isLoggedIn()) {
+            showStatsMessage("Log in to see your performance");
+            return;
+        }
+
+        showStatsMessage("Loading your latest session…");
+
+        ApiService apiService = RetrofitClient
+                .getInstance()
+                .create(ApiService.class);
+
+        apiService.getLatestResult(SessionManager.loggedInUserId)
+                .enqueue(new Callback<LatestResultResponse>() {
+                    @Override
+                    public void onResponse(
+                            @NonNull Call<LatestResultResponse> call,
+                            @NonNull Response<LatestResultResponse> response
+                    ) {
+                        if (!isAdded()) {
+                            return;
+                        }
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            bindLatestResult(response.body());
+                        } else {
+                            // 404 when the user has no results yet.
+                            showStatsMessage("No training sessions yet. Start your first session!");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(
+                            @NonNull Call<LatestResultResponse> call,
+                            @NonNull Throwable t
+                    ) {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        showStatsMessage("Couldn't load performance. Check your connection.");
+                    }
+                });
+    }
+
+    private void bindLatestResult(LatestResultResponse result) {
+        homeScoreText.setText(String.valueOf(result.getScore()));
+        homeAccuracyText.setText(String.format(Locale.US, "%.0f%%", result.getAccuracy()));
+        homeMistakesText.setText(String.valueOf(result.getMistakes()));
+        homeDurationText.setText(formatDuration(result.getDurationSeconds()));
+
+        homeStatsMessage.setVisibility(View.GONE);
+        homeStatsCards.setVisibility(View.VISIBLE);
+    }
+
+    private void showStatsMessage(String message) {
+        homeStatsMessage.setText(message);
+        homeStatsMessage.setVisibility(View.VISIBLE);
+        homeStatsCards.setVisibility(View.GONE);
+    }
+
+    private String formatDuration(int seconds) {
+        int minutes = seconds / 60;
+        int remainingSeconds = seconds % 60;
+        return String.format(Locale.US, "%02d:%02d", minutes, remainingSeconds);
     }
 
     private String getLoggedInFullName() {
