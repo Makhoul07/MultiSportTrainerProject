@@ -35,8 +35,6 @@ namespace MultiSportTrainerAPI.Controllers
                     r.Accuracy,
                     r.Mistakes,
                     r.DurationSeconds,
-                    r.AverageReactionSeconds,
-                    r.BestReactionSeconds,
                     r.CreatedAt
                 })
                 .ToListAsync();

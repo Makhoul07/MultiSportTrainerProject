@@ -24,9 +24,7 @@ public class PerformanceStatisticsFragment extends Fragment {
     private TextView totalSessionsText;
     private TextView avgAccuracyText;
     private TextView avgScoreText;
-    private TextView avgReactionText;
     private TextView personalBestText;
-    private TextView bestReactionText;
 
     public PerformanceStatisticsFragment() {
         // Required empty constructor
@@ -44,9 +42,7 @@ public class PerformanceStatisticsFragment extends Fragment {
         totalSessionsText = view.findViewById(R.id.totalSessionsText);
         avgAccuracyText = view.findViewById(R.id.avgAccuracyText);
         avgScoreText = view.findViewById(R.id.avgScoreText);
-        avgReactionText = view.findViewById(R.id.avgReactionText);
         personalBestText = view.findViewById(R.id.personalBestText);
-        bestReactionText = view.findViewById(R.id.bestReactionText);
 
         loadStatistics();
 
@@ -76,9 +72,7 @@ public class PerformanceStatisticsFragment extends Fragment {
                             totalSessionsText.setText(String.valueOf(stats.getTotalTrainings()));
                             avgAccuracyText.setText(String.format("%.0f%% ↗", stats.getAvgAccuracy()));
                             avgScoreText.setText(String.valueOf((int) stats.getAvgScore()));
-                            avgReactionText.setText(String.format("%.1fs", stats.getAvgReaction()));
                             personalBestText.setText(String.valueOf(stats.getBestScore()));
-                            bestReactionText.setText(String.format("%.1fs", stats.getBestReaction()));
 
                         } else {
                             Toast.makeText(

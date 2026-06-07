@@ -11,7 +11,6 @@ public class UserProfileResponse {
     private int totalTrainings;
     private int bestScore;
     private double avgAccuracy;
-    private double avgReaction;
 
     public int getUserId() {
         return userId;
@@ -47,9 +46,5 @@ public class UserProfileResponse {
 
     public double getAvgAccuracy() {
         return avgAccuracy;
-    }
-
-    public double getAvgReaction() {
-        return avgReaction;
     }
 }

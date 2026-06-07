@@ -27,7 +27,6 @@ public class ResultsFragment extends Fragment {
     private TextView resultTimeText;
     private TextView resultAccuracyText;
     private TextView resultMistakesText;
-    private TextView resultReactionText;
     private TextView resultInsightText;
 
     private MaterialButton newTrainingButton;
@@ -50,7 +49,6 @@ public class ResultsFragment extends Fragment {
         resultTimeText = view.findViewById(R.id.resultTimeText);
         resultAccuracyText = view.findViewById(R.id.resultAccuracyText);
         resultMistakesText = view.findViewById(R.id.resultMistakesText);
-        resultReactionText = view.findViewById(R.id.resultReactionText);
         resultInsightText = view.findViewById(R.id.resultInsightText);
 
         newTrainingButton = view.findViewById(R.id.btn_new_training);
@@ -97,13 +95,12 @@ public class ResultsFragment extends Fragment {
         resultTimeText.setText(formatDuration(CurrentTrainingData.durationSeconds));
         resultAccuracyText.setText(String.format("%.0f%%", CurrentTrainingData.accuracy));
         resultMistakesText.setText(String.valueOf(CurrentTrainingData.mistakes));
-        resultReactionText.setText(String.format("%.1fs", CurrentTrainingData.averageReactionSeconds));
 
         String insight = "You completed a "
                 + CurrentTrainingData.routeType.toLowerCase()
                 + " route with "
                 + CurrentTrainingData.coneSequence.size()
-                + " cones. Keep training to improve reaction speed and reduce mistakes.";
+                + " cones. Keep training to improve accuracy and reduce mistakes.";
 
         resultInsightText.setText(insight);
     }
@@ -129,9 +126,7 @@ public class ResultsFragment extends Fragment {
                 CurrentTrainingData.score,
                 CurrentTrainingData.accuracy,
                 CurrentTrainingData.mistakes,
-                CurrentTrainingData.durationSeconds,
-                CurrentTrainingData.averageReactionSeconds,
-                CurrentTrainingData.bestReactionSeconds
+                CurrentTrainingData.durationSeconds
         );
 
         ApiService apiService = RetrofitClient

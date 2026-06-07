@@ -42,8 +42,6 @@ namespace MultiSportTrainerAPI.Controllers
                 Accuracy = request.Accuracy,
                 Mistakes = request.Mistakes,
                 DurationSeconds = request.DurationSeconds,
-                AverageReactionSeconds = request.AverageReactionSeconds,
-                BestReactionSeconds = request.BestReactionSeconds,
                 CreatedAt = DateTime.Now
             };
 
@@ -63,8 +61,6 @@ namespace MultiSportTrainerAPI.Controllers
                 result.Accuracy,
                 result.Mistakes,
                 result.DurationSeconds,
-                result.AverageReactionSeconds,
-                result.BestReactionSeconds,
                 result.CreatedAt,
                 message = "Result saved successfully"
             });
@@ -88,8 +84,6 @@ namespace MultiSportTrainerAPI.Controllers
                     r.Accuracy,
                     r.Mistakes,
                     r.DurationSeconds,
-                    r.AverageReactionSeconds,
-                    r.BestReactionSeconds,
                     r.CreatedAt
                 })
                 .ToListAsync();

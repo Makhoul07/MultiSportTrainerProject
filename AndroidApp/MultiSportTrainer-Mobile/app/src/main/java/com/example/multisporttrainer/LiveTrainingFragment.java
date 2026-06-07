@@ -193,7 +193,6 @@ public class LiveTrainingFragment extends Fragment implements MqttTrainingListen
         final double accuracy = payload.optDouble("accuracy", 0);
         final int mistakes = payload.optInt("mistakes", 0);
         final int durationSeconds = (int) payload.optDouble("duration_seconds", elapsedSeconds);
-        final double avgReaction = payload.optDouble("average_reaction_seconds", 0);
 
         runOnUi(() -> {
             stopTimer();
@@ -202,7 +201,6 @@ public class LiveTrainingFragment extends Fragment implements MqttTrainingListen
             CurrentTrainingData.accuracy = accuracy;
             CurrentTrainingData.mistakes = mistakes;
             CurrentTrainingData.durationSeconds = durationSeconds;
-            CurrentTrainingData.averageReactionSeconds = avgReaction;
 
             // Easy = no distractions; Medium/Hard = distractions on.
             String difficulty = CurrentTrainingData.difficulty == null

@@ -41,11 +41,6 @@ namespace MultiSportTrainerAPI.Controllers
                     AvgAccuracy = _context.TrainingResults
                         .Where(r => r.UserId == userId)
                         .Select(r => (decimal?)r.Accuracy)
-                        .Average() ?? 0,
-
-                    AvgReaction = _context.TrainingResults
-                        .Where(r => r.UserId == userId)
-                        .Select(r => r.AverageReactionSeconds)
                         .Average() ?? 0
                 })
                 .FirstOrDefaultAsync();

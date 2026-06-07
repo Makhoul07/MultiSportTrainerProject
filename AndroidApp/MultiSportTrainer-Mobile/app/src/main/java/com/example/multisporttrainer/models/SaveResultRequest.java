@@ -8,8 +8,6 @@ public class SaveResultRequest {
     private double accuracy;
     private int mistakes;
     private int durationSeconds;
-    private double averageReactionSeconds;
-    private double bestReactionSeconds;
 
     public SaveResultRequest(
             int sessionId,
@@ -17,9 +15,7 @@ public class SaveResultRequest {
             int score,
             double accuracy,
             int mistakes,
-            int durationSeconds,
-            double averageReactionSeconds,
-            double bestReactionSeconds
+            int durationSeconds
     ) {
         this.sessionId = sessionId;
         this.userId = userId;
@@ -27,7 +23,5 @@ public class SaveResultRequest {
         this.accuracy = accuracy;
         this.mistakes = mistakes;
         this.durationSeconds = durationSeconds;
-        this.averageReactionSeconds = averageReactionSeconds;
-        this.bestReactionSeconds = bestReactionSeconds;
     }
 }

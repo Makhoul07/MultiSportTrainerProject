@@ -209,34 +209,6 @@
 
             </LinearLayout>
 
-            <!-- Avg Reaction -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="88dp"
-                android:layout_columnWeight="1"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/bg_card"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Avg Reaction"
-                    android:textColor="@color/text_gray"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1.3s"
-                    android:textColor="@color/primary_blue"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
         </GridLayout>
 
         <!-- PROFILE DETAILS CARD -->

@@ -24,8 +24,6 @@ public class CurrentTrainingData {
     public static double accuracy = 88.0;
     public static int mistakes = 2;
     public static int durationSeconds = 102;
-    public static double averageReactionSeconds = 1.4;
-    public static double bestReactionSeconds = 0.9;
 
     public static void clear() {
         sessionId = -1;
@@ -47,7 +45,5 @@ public class CurrentTrainingData {
         accuracy = 88.0;
         mistakes = 2;
         durationSeconds = 102;
-        averageReactionSeconds = 1.4;
-        bestReactionSeconds = 0.9;
     }
 }

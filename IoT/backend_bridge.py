@@ -60,8 +60,6 @@ def save_result_to_backend(payload):
         "Mistakes": payload.get("mistakes", 0),
         # Backend DurationSeconds is an int; duration_seconds is a float -> cast.
         "DurationSeconds": int(payload.get("duration_seconds", 0)),
-        "AverageReactionSeconds": payload.get("average_reaction_seconds", 0),
-        "BestReactionSeconds": payload.get("best_reaction_seconds", 0),
     }
 
     try:

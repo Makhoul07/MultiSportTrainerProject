@@ -30,7 +30,6 @@ namespace MultiSportTrainerAPI.Controllers
                     bestScore = 0,
                     avgScore = 0,
                     avgAccuracy = 0,
-                    avgReaction = 0,
                     totalTimeSeconds = 0
                 });
             }
@@ -41,8 +40,6 @@ namespace MultiSportTrainerAPI.Controllers
                 bestScore = results.Max(r => r.Score),
                 avgScore = Math.Round(results.Average(r => r.Score), 2),
                 avgAccuracy = Math.Round(results.Average(r => r.Accuracy), 2),
-                avgReaction = Math.Round(results.Average(r => r.AverageReactionSeconds ?? 0), 2),
-                bestReaction = results.Min(r => r.BestReactionSeconds ?? 0),
                 totalTimeSeconds = results.Sum(r => r.DurationSeconds)
             };
 
@@ -67,8 +64,6 @@ namespace MultiSportTrainerAPI.Controllers
                     r.Accuracy,
                     r.Mistakes,
                     r.DurationSeconds,
-                    r.AverageReactionSeconds,
-                    r.BestReactionSeconds,
                     r.CreatedAt
                 })
                 .FirstOrDefaultAsync();

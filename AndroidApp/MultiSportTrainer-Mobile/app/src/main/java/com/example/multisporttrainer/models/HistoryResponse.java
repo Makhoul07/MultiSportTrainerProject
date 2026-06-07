@@ -13,8 +13,6 @@ public class HistoryResponse {
     private double accuracy;
     private int mistakes;
     private int durationSeconds;
-    private double averageReactionSeconds;
-    private double bestReactionSeconds;
     private String createdAt;
 
     public int getResultId() {
@@ -59,14 +57,6 @@ public class HistoryResponse {
 
     public int getDurationSeconds() {
         return durationSeconds;
-    }
-
-    public double getAverageReactionSeconds() {
-        return averageReactionSeconds;
-    }
-
-    public double getBestReactionSeconds() {
-        return bestReactionSeconds;
     }
 
     public String getCreatedAt() {

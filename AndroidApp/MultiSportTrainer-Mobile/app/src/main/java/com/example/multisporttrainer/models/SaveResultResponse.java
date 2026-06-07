@@ -9,8 +9,6 @@ public class SaveResultResponse {
     private double accuracy;
     private int mistakes;
     private int durationSeconds;
-    private double averageReactionSeconds;
-    private double bestReactionSeconds;
     private String createdAt;
     private String message;
 

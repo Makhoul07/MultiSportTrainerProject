@@ -26,8 +26,6 @@ public class StatisticsFragment extends Fragment {
     private TextView durationText;
     private TextView accuracyText;
     private TextView mistakesText;
-    private TextView avgReactionText;
-    private TextView bestReactionText;
 
     public StatisticsFragment() {
         // Required empty constructor
@@ -46,8 +44,6 @@ public class StatisticsFragment extends Fragment {
         durationText = view.findViewById(R.id.latestDurationText);
         accuracyText = view.findViewById(R.id.latestAccuracyText);
         mistakesText = view.findViewById(R.id.latestMistakesText);
-        avgReactionText = view.findViewById(R.id.latestAvgReactionText);
-        bestReactionText = view.findViewById(R.id.latestBestReactionText);
 
         loadLatestResult();
 
@@ -110,8 +106,6 @@ public class StatisticsFragment extends Fragment {
                             durationText.setText(formatDuration(result.getDurationSeconds()));
                             accuracyText.setText(String.format("%.0f%%", result.getAccuracy()));
                             mistakesText.setText(String.valueOf(result.getMistakes()));
-                            avgReactionText.setText(String.format("%.1fs", result.getAverageReactionSeconds()));
-                            bestReactionText.setText(String.format("%.1fs", result.getBestReactionSeconds()));
 
                         } else {
                             Toast.makeText(

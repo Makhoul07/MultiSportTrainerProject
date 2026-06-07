@@ -13,9 +13,5 @@
         public int Mistakes { get; set; }
 
         public int DurationSeconds { get; set; }
-
-        public decimal? AverageReactionSeconds { get; set; }
-
-        public decimal? BestReactionSeconds { get; set; }
     }
 }

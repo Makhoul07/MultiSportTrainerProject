@@ -213,35 +213,6 @@
 
             </LinearLayout>
 
-            <!-- Reaction -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="78dp"
-                android:layout_columnWeight="1"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/bg_card"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Reaction"
-                    android:textColor="@color/text_gray"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:id="@+id/avgReactionText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="1.3s"
-                    android:textColor="@color/text_dark"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
         </GridLayout>
 
         <!-- PERSONAL BEST CARD -->
@@ -445,50 +416,6 @@
                 android:progress="87"
                 android:progressTint="@color/primary_blue"
                 android:progressBackgroundTint="#E5E7EB" />
-
-        </LinearLayout>
-
-        <!-- REACTION TIME -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="135dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="14dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Reaction Time"
-                android:textColor="@color/text_dark"
-                android:textSize="12sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="78dp"
-                android:layout_marginTop="12dp"
-                android:background="#FAF7F7"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/bestReactionText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0.9s"
-                    android:textColor="@color/primary_blue"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="best reaction time"
-                    android:textColor="@color/text_gray"
-                    android:textSize="9sp" />
-
-            </LinearLayout>
 
         </LinearLayout>
 
