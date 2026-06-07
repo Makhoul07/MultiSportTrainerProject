@@ -59,7 +59,7 @@ public class ProfileFragment extends Fragment {
         });
 
         view.findViewById(R.id.logoutButton).setOnClickListener(v -> {
-            SessionManager.clearSession();
+            SessionManager.clearSession(requireContext());
 
             Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
 

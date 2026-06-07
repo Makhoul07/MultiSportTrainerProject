@@ -116,6 +116,16 @@ public class LoginFragment extends Fragment {
                     SessionManager.loggedInRole = authResponse.getRole();
                     SessionManager.loggedInSportFocus = authResponse.getSportFocus();
 
+                    // Persist the session so the user stays logged in across restarts.
+                    SessionPreferences.save(
+                            requireContext(),
+                            authResponse.getUserId(),
+                            authResponse.getFullName(),
+                            authResponse.getEmail(),
+                            authResponse.getRole(),
+                            authResponse.getSportFocus()
+                    );
+
                     Toast.makeText(
                             getContext(),
                             authResponse.getMessage(),
