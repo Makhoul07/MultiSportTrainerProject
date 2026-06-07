@@ -18,6 +18,7 @@ public final class SessionPreferences {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_ROLE = "role";
     private static final String KEY_SPORT_FOCUS = "sportFocus";
+    private static final String KEY_LAST_TAB = "lastTab";
 
     private SessionPreferences() {
         // static helper only
@@ -74,5 +75,14 @@ public final class SessionPreferences {
 
     public static String getSportFocus(Context context) {
         return prefs(context).getString(KEY_SPORT_FOCUS, "");
+    }
+
+    /** Remember the bottom-nav tab the user is on, to restore it on next launch. */
+    public static void saveLastTab(Context context, int itemId) {
+        prefs(context).edit().putInt(KEY_LAST_TAB, itemId).apply();
+    }
+
+    public static int getLastTab(Context context, int defaultItemId) {
+        return prefs(context).getInt(KEY_LAST_TAB, defaultItemId);
     }
 }
