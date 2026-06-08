@@ -31,8 +31,56 @@ BACKEND_IP = "10.206.240.14"
 BACKEND_PORT = 5062
 
 RESULTS_ENDPOINT = f"http://{BACKEND_IP}:{BACKEND_PORT}/api/Results/save"
+AUTH_ENDPOINT = f"http://{BACKEND_IP}:{BACKEND_PORT}/api/Auth/login"
 
 REQUEST_TIMEOUT = 10  # seconds
+
+# Dedicated service account the bridge uses to authenticate against the (now
+# JWT-protected) API. Must exist in the DB — see Database/seed_bridge_user.sql.
+BRIDGE_EMAIL = "bridge@multisport.local"
+BRIDGE_PASSWORD = "Bridge#Service2026"
+
+# Cached JWT, populated by login(). None until the first successful login.
+_auth_token = None
+
+
+# =========================
+# AUTHENTICATION
+# =========================
+
+def login():
+    """Log the bridge service account in and cache its JWT. Returns True on success.
+
+    Never raises — failures are logged so a transient auth problem doesn't crash
+    the MQTT loop; the next save attempt will retry.
+    """
+    global _auth_token
+
+    try:
+        response = requests.post(
+            AUTH_ENDPOINT,
+            json={"email": BRIDGE_EMAIL, "password": BRIDGE_PASSWORD},
+            timeout=REQUEST_TIMEOUT,
+        )
+
+        if response.status_code == 200:
+            _auth_token = response.json().get("token")
+            if _auth_token:
+                print("Bridge authenticated; JWT acquired.")
+                return True
+            print("Login succeeded but no token was returned.")
+            return False
+
+        print(f"Bridge login failed {response.status_code}: {response.text}")
+        return False
+
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to reach auth endpoint {AUTH_ENDPOINT}: {e}")
+        return False
+
+
+def _auth_headers():
+    return {"Authorization": f"Bearer {_auth_token}"} if _auth_token else {}
 
 
 # =========================
@@ -63,7 +111,17 @@ def save_result_to_backend(payload):
     }
 
     try:
-        response = requests.post(RESULTS_ENDPOINT, json=body, timeout=REQUEST_TIMEOUT)
+        response = requests.post(
+            RESULTS_ENDPOINT, json=body, headers=_auth_headers(), timeout=REQUEST_TIMEOUT
+        )
+
+        # Token missing/expired: re-authenticate once and retry the save.
+        if response.status_code == 401:
+            print("Backend returned 401; re-authenticating and retrying once...")
+            if login():
+                response = requests.post(
+                    RESULTS_ENDPOINT, json=body, headers=_auth_headers(), timeout=REQUEST_TIMEOUT
+                )
 
         if response.status_code in (200, 201):
             print(f"Result saved to backend (session {session_id}): {response.status_code}")
@@ -110,6 +168,11 @@ def main():
     if BACKEND_IP == "YOUR_BACKEND_IP":
         print("WARNING: BACKEND_IP is not configured. "
               "Edit backend_bridge.py and set BACKEND_IP to your API host.")
+
+    # Authenticate up front so the first result save already has a token. If this
+    # fails (API down, bad creds), keep going — save_result_to_backend retries on 401.
+    if not login():
+        print("WARNING: initial bridge login failed; will retry on first 401.")
 
     # paho-mqtt 2.x requires an explicit callback API version. VERSION1 keeps the
     # familiar on_connect(client, userdata, flags, rc) signatures used above.
