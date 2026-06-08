@@ -16,6 +16,8 @@ import com.example.multisporttrainer.api.ApiService;
 import com.example.multisporttrainer.api.RetrofitClient;
 import com.example.multisporttrainer.models.UserProfileResponse;
 
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,6 +29,9 @@ public class ProfileFragment extends Fragment {
     private TextView detailsEmailText;
     private TextView detailsDobText;
     private TextView detailsRoleText;
+    private TextView statTotalTrainingsText;
+    private TextView statBestScoreText;
+    private TextView statAvgAccuracyText;
 
     public ProfileFragment() {
         // Required empty constructor
@@ -46,6 +51,15 @@ public class ProfileFragment extends Fragment {
         detailsEmailText = view.findViewById(R.id.detailsEmailText);
         detailsDobText = view.findViewById(R.id.detailsDobText);
         detailsRoleText = view.findViewById(R.id.detailsRoleText);
+        statTotalTrainingsText = view.findViewById(R.id.statTotalTrainingsText);
+        statBestScoreText = view.findViewById(R.id.statBestScoreText);
+        statAvgAccuracyText = view.findViewById(R.id.statAvgAccuracyText);
+
+        // Show a loading state until the backend responds (replaces the static
+        // placeholder values baked into the layout).
+        statTotalTrainingsText.setText("…");
+        statBestScoreText.setText("…");
+        statAvgAccuracyText.setText("…");
 
         loadProfileFromBackend();
 
@@ -69,6 +83,13 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    /** Reset the stat cards to zero when the profile/stats can't be loaded. */
+    private void showStatsUnavailable() {
+        statTotalTrainingsText.setText("0");
+        statBestScoreText.setText("0");
+        statAvgAccuracyText.setText("0%");
     }
 
     private void loadProfileFromBackend() {
@@ -103,12 +124,20 @@ public class ProfileFragment extends Fragment {
 
                             detailsRoleText.setText(user.getRole());
 
+                            // Real stats come from the same response (backend returns
+                            // 0 for each when the user has no results yet).
+                            statTotalTrainingsText.setText(String.valueOf(user.getTotalTrainings()));
+                            statBestScoreText.setText(String.valueOf(user.getBestScore()));
+                            statAvgAccuracyText.setText(
+                                    String.format(Locale.US, "%.0f%%", user.getAvgAccuracy()));
+
                             ProfileData.fullName = user.getFullName();
                             ProfileData.email = user.getEmail();
                             ProfileData.dob = detailsDobText.getText().toString();
                             ProfileData.role = user.getRole();
 
                         } else {
+                            showStatsUnavailable();
                             Toast.makeText(
                                     getContext(),
                                     "Failed to load profile",
@@ -122,6 +151,7 @@ public class ProfileFragment extends Fragment {
                             @NonNull Call<UserProfileResponse> call,
                             @NonNull Throwable t
                     ) {
+                        showStatsUnavailable();
                         Toast.makeText(
                                 getContext(),
                                 "Connection error: " + t.getMessage(),
