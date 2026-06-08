@@ -3,6 +3,7 @@ import random
 import time
 
 from session_logger import save_session
+from email_notifier import send_training_result_email
 from config import *
 
 from mqtt_handler import (
@@ -104,6 +105,17 @@ def finish_training():
 
     save_session(final_result)
 
+    send_training_result_email(
+        to_email=current_session.get("email", ""),
+        player_name=current_session["player"],
+        score=current_score,
+        accuracy=accuracy,
+        mistakes=mistakes,
+        duration_seconds=duration_seconds,
+        difficulty=current_session.get("difficulty"),
+        route_type=current_session.get("mode"),
+    )
+
     print("\n=== TRAINING FINISHED ===")
 
 
@@ -200,6 +212,7 @@ def start_training(data):
 
     session_id = data.get("session_id", -1)
     user_id = data.get("user_id", -1)
+    email = data.get("email", "")
 
     if mode == "custom_route":
         # Use the exact sequence the player built in the app. Keep only real
@@ -225,6 +238,7 @@ def start_training(data):
     current_session = {
         "session_id": session_id,
         "user_id": user_id,
+        "email": email,
         "player": player,
         "mode": mode,
         "difficulty": difficulty,

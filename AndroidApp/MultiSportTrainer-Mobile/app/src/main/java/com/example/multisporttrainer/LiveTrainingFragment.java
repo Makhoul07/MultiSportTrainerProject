@@ -117,6 +117,7 @@ public class LiveTrainingFragment extends Fragment implements MqttTrainingListen
                 JSONObject command = MqttMessages.startTraining(
                         CurrentTrainingData.sessionId,
                         SessionManager.loggedInUserId,
+                        SessionManager.loggedInEmail,
                         player,
                         mode,
                         CurrentTrainingData.difficulty == null

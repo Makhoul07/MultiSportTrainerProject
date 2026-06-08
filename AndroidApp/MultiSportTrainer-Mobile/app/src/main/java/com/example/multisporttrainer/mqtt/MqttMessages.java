@@ -43,6 +43,8 @@ public final class MqttMessages {
      *
      * @param sessionId  backend TrainingSession id (CurrentTrainingData.sessionId)
      * @param userId     backend user id (SessionManager.loggedInUserId)
+     * @param email      user's email (SessionManager.loggedInEmail); used by the
+     *                   IoT email notifier to send the results summary
      * @param player     display name; required by the simulator (never empty)
      * @param mode       MODE_CUSTOM or MODE_GENERATED
      * @param difficulty easy/medium/hard
@@ -51,6 +53,7 @@ public final class MqttMessages {
      */
     public static JSONObject startTraining(int sessionId,
                                            int userId,
+                                           String email,
                                            String player,
                                            String mode,
                                            String difficulty,
@@ -60,6 +63,7 @@ public final class MqttMessages {
         cmd.put("command", "start_training");
         cmd.put("session_id", sessionId);
         cmd.put("user_id", userId);
+        cmd.put("email", email == null ? "" : email);
         cmd.put("player", (player == null || player.trim().isEmpty()) ? "Guest" : player);
         cmd.put("mode", mode);
         cmd.put("difficulty", difficulty == null ? "medium" : difficulty.toLowerCase());
