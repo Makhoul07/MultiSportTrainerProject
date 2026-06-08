@@ -46,4 +46,5 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     implementation("androidx.biometric:biometric:1.1.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
 }

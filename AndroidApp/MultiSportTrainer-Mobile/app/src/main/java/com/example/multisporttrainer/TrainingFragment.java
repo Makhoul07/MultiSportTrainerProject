@@ -53,7 +53,13 @@ public class TrainingFragment extends Fragment {
 
         continueButton = view.findViewById(R.id.btn_continue_setup);
 
-        selectCustomRoute();
+        // Pre-select the route mode from CurrentTrainingData so a Retry from
+        // History lands on the same mode (defaults to Custom otherwise).
+        if ("Generated".equalsIgnoreCase(CurrentTrainingData.routeType)) {
+            selectGeneratedRoute();
+        } else {
+            selectCustomRoute();
+        }
 
         customCard.setOnClickListener(v -> selectCustomRoute());
         generatedCard.setOnClickListener(v -> selectGeneratedRoute());
@@ -69,9 +75,12 @@ public class TrainingFragment extends Fragment {
             return;
         }
 
-        // Reset all training state; difficulty/route/session are set on the next screen.
+        // Reset training state, but preserve the chosen difficulty so it carries
+        // to the route screen (e.g. a Retry that pre-set it from History).
+        String keepDifficulty = CurrentTrainingData.difficulty;
         CurrentTrainingData.clear();
         CurrentTrainingData.routeType = isCustomSelected ? "Custom" : "Generated";
+        CurrentTrainingData.difficulty = keepDifficulty;
         CurrentTrainingData.trainingType = "Football Dribbling";
 
         if (isCustomSelected) {

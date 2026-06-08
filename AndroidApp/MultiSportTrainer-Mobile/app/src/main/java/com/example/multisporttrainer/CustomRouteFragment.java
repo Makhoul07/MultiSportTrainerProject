@@ -65,6 +65,7 @@ public class CustomRouteFragment extends Fragment {
         undoLastButton = view.findViewById(R.id.btn_undo_last);
         clearRouteButton = view.findViewById(R.id.btn_clear_route);
         difficultyRadioGroup = view.findViewById(R.id.difficultyRadioGroup);
+        applyDifficultyFromCurrent();
 
         MaterialCardView cone1 = view.findViewById(R.id.card_cone_1);
         MaterialCardView cone2 = view.findViewById(R.id.card_cone_2);
@@ -119,6 +120,25 @@ public class CustomRouteFragment extends Fragment {
         selectedRoute.clear();
         updateRouteText();
         updateActionButtons();
+    }
+
+    /** Default the difficulty selector to CurrentTrainingData (e.g. a Retry preset). */
+    private void applyDifficultyFromCurrent() {
+        String difficulty = CurrentTrainingData.difficulty;
+        if (difficulty == null) {
+            return;
+        }
+        switch (difficulty.toLowerCase(java.util.Locale.US)) {
+            case "easy":
+                difficultyRadioGroup.check(R.id.radioEasy);
+                break;
+            case "hard":
+                difficultyRadioGroup.check(R.id.radioHard);
+                break;
+            default:
+                difficultyRadioGroup.check(R.id.radioMedium);
+                break;
+        }
     }
 
     private String selectedDifficulty() {

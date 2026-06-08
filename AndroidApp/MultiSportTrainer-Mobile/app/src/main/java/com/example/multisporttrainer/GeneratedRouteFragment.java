@@ -47,6 +47,7 @@ public class GeneratedRouteFragment extends Fragment {
         LinearLayout backButton = view.findViewById(R.id.btn_back_training);
         continueButton = view.findViewById(R.id.btn_generated_to_setup);
         difficultyRadioGroup = view.findViewById(R.id.difficultyRadioGroup);
+        applyDifficultyFromCurrent();
 
         backButton.setOnClickListener(v -> {
             requireActivity()
@@ -59,6 +60,25 @@ public class GeneratedRouteFragment extends Fragment {
         continueButton.setOnClickListener(v -> validateAndStart());
 
         return view;
+    }
+
+    /** Default the difficulty selector to CurrentTrainingData (e.g. a Retry preset). */
+    private void applyDifficultyFromCurrent() {
+        String difficulty = CurrentTrainingData.difficulty;
+        if (difficulty == null) {
+            return;
+        }
+        switch (difficulty.toLowerCase(java.util.Locale.US)) {
+            case "easy":
+                difficultyRadioGroup.check(R.id.radioEasy);
+                break;
+            case "hard":
+                difficultyRadioGroup.check(R.id.radioHard);
+                break;
+            default:
+                difficultyRadioGroup.check(R.id.radioMedium);
+                break;
+        }
     }
 
     private String selectedDifficulty() {

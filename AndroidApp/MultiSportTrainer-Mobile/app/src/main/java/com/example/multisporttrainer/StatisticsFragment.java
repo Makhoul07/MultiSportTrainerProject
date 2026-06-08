@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import com.example.multisporttrainer.api.ApiService;
 import com.example.multisporttrainer.api.RetrofitClient;
 import com.example.multisporttrainer.models.LatestResultResponse;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,35 +46,25 @@ public class StatisticsFragment extends Fragment {
 
         loadLatestResult();
 
-        view.findViewById(R.id.retryButton).setOnClickListener(v -> {
-            openFragment(new TrainingFragment());
-            selectBottomNavItem(R.id.nav_training);
-        });
+        view.findViewById(R.id.viewHistoryButton).setOnClickListener(v ->
+                openScreen(new HistoryFragment()));
 
-        view.findViewById(R.id.newTrainingButton).setOnClickListener(v -> {
-            openFragment(new TrainingFragment());
-            selectBottomNavItem(R.id.nav_training);
-        });
+        view.findViewById(R.id.viewLeaderboardButton).setOnClickListener(v ->
+                openScreen(new LeaderboardFragment()));
 
-        view.findViewById(R.id.viewLeaderboardButton).setOnClickListener(v -> {
-            requireActivity()
-                    .getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, new LeaderboardFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
-        view.findViewById(R.id.viewStatisticsButton).setOnClickListener(v -> {
-            requireActivity()
-                    .getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, new PerformanceStatisticsFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
+        view.findViewById(R.id.viewStatisticsButton).setOnClickListener(v ->
+                openScreen(new PerformanceStatisticsFragment()));
 
         return view;
+    }
+
+    private void openScreen(Fragment fragment) {
+        requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void loadLatestResult() {
@@ -130,22 +119,5 @@ public class StatisticsFragment extends Fragment {
         int minutes = seconds / 60;
         int remainingSeconds = seconds % 60;
         return String.format("%02d:%02d", minutes, remainingSeconds);
-    }
-
-    private void openFragment(Fragment fragment) {
-        requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-    }
-
-    private void selectBottomNavItem(int itemId) {
-        BottomNavigationView bottomNavigationView =
-                requireActivity().findViewById(R.id.bottom_navigation);
-
-        if (bottomNavigationView != null) {
-            bottomNavigationView.setSelectedItemId(itemId);
-        }
     }
 }

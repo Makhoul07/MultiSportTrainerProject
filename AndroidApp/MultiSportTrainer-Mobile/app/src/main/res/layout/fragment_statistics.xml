@@ -227,15 +227,15 @@
 
         </LinearLayout>
 
-        <!-- RETRY BUTTON -->
+        <!-- VIEW HISTORY BUTTON -->
         <Button
-            android:id="@+id/retryButton"
+            android:id="@+id/viewHistoryButton"
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:layout_marginTop="12dp"
-            android:backgroundTint="@android:color/white"
-            android:text="RETRY"
-            android:textColor="@color/primary_blue"
+            android:backgroundTint="@color/primary_blue"
+            android:text="VIEW HISTORY"
+            android:textColor="@android:color/white"
             android:textSize="11sp"
             android:textStyle="bold" />
 
@@ -265,17 +265,6 @@
             android:textStyle="bold"
             android:clickable="true"
             android:focusable="true" />
-
-        <!-- NEW TRAINING -->
-        <TextView
-            android:id="@+id/newTrainingButton"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:gravity="center"
-            android:text="⊕  NEW TRAINING"
-            android:textColor="@color/text_dark"
-            android:textSize="12sp"
-            android:textStyle="bold" />
 
     </LinearLayout>
 
