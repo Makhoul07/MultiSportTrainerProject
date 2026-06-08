@@ -31,6 +31,11 @@ namespace MultiSportTrainerAPI.Controllers
                     Difficulty = r.Session != null ? r.Session.Difficulty : "",
                     ConesCount = r.Session != null ? r.Session.ConesCount : 0,
                     Rounds = r.Session != null ? r.Session.Rounds : 0,
+                    ConeSequence = _context.RouteSteps
+                        .Where(s => s.Route!.SessionId == r.SessionId)
+                        .OrderBy(s => s.StepOrder)
+                        .Select(s => s.ConeNumber)
+                        .ToList(),
                     r.Score,
                     r.Accuracy,
                     r.Mistakes,

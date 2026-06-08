@@ -1,5 +1,7 @@
 package com.example.multisporttrainer.models;
 
+import java.util.List;
+
 public class HistoryResponse {
 
     private int resultId;
@@ -9,6 +11,7 @@ public class HistoryResponse {
     private String difficulty;
     private int conesCount;
     private int rounds;
+    private List<Integer> coneSequence;
     private int score;
     private double accuracy;
     private int mistakes;
@@ -41,6 +44,10 @@ public class HistoryResponse {
 
     public int getRounds() {
         return rounds;
+    }
+
+    public List<Integer> getConeSequence() {
+        return coneSequence;
     }
 
     public int getScore() {

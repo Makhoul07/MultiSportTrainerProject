@@ -144,6 +144,13 @@ public class HistoryFragment extends Fragment {
         CurrentTrainingData.difficulty = item.getDifficulty();
         CurrentTrainingData.trainingType = item.getTrainingType();
 
+        // Carry the past session's cone sequence so CustomRouteFragment can
+        // pre-fill it (Generated sessions have no saved route, so this is empty).
+        List<Integer> coneSequence = item.getConeSequence();
+        if (coneSequence != null && !coneSequence.isEmpty()) {
+            CurrentTrainingData.coneSequence.addAll(coneSequence);
+        }
+
         Fragment routeScreen = isGenerated
                 ? new GeneratedRouteFragment()
                 : new CustomRouteFragment();

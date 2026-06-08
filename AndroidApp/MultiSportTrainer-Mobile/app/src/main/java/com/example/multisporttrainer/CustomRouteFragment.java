@@ -66,6 +66,7 @@ public class CustomRouteFragment extends Fragment {
         clearRouteButton = view.findViewById(R.id.btn_clear_route);
         difficultyRadioGroup = view.findViewById(R.id.difficultyRadioGroup);
         applyDifficultyFromCurrent();
+        applyRouteFromCurrent();
 
         MaterialCardView cone1 = view.findViewById(R.id.card_cone_1);
         MaterialCardView cone2 = view.findViewById(R.id.card_cone_2);
@@ -139,6 +140,19 @@ public class CustomRouteFragment extends Fragment {
                 difficultyRadioGroup.check(R.id.radioMedium);
                 break;
         }
+    }
+
+    /**
+     * Pre-fill the cone sequence from CurrentTrainingData (e.g. a Retry preset).
+     * The route text and action buttons are refreshed by the updateRouteText()
+     * / updateActionButtons() calls at the end of onCreateView.
+     */
+    private void applyRouteFromCurrent() {
+        if (CurrentTrainingData.coneSequence.isEmpty()) {
+            return;
+        }
+        selectedRoute.clear();
+        selectedRoute.addAll(CurrentTrainingData.coneSequence);
     }
 
     private String selectedDifficulty() {
