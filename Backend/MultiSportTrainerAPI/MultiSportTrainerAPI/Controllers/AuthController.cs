@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MultiSportTrainerAPI.Data;
 using MultiSportTrainerAPI.DTOs;
 using MultiSportTrainerAPI.Models;
@@ -11,10 +15,12 @@ namespace MultiSportTrainerAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(AppDbContext context)
+        public AuthController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -72,6 +78,7 @@ namespace MultiSportTrainerAPI.Controllers
                 Email = user.Email,
                 Role = user.Role,
                 SportFocus = user.SportFocus,
+                Token = GenerateJwtToken(user),
                 Message = "Account created successfully"
             };
 
@@ -111,10 +118,34 @@ namespace MultiSportTrainerAPI.Controllers
                 Email = user.Email,
                 Role = user.Role,
                 SportFocus = user.SportFocus,
+                Token = GenerateJwtToken(user),
                 Message = "Login successful"
             };
 
             return Ok(response);
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var jwt = _configuration.GetSection("Jwt");
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["Key"]!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: jwt["Issuer"],
+                audience: jwt["Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(double.Parse(jwt["ExpiryHours"] ?? "24")),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         private bool IsValidPassword(string password)

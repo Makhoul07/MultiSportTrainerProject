@@ -126,6 +126,9 @@ public class LoginFragment extends Fragment {
                             authResponse.getSportFocus()
                     );
 
+                    // Persist the JWT so the auth interceptor attaches it to API calls.
+                    SessionPreferences.saveToken(requireContext(), authResponse.getToken());
+
                     Toast.makeText(
                             getContext(),
                             authResponse.getMessage(),

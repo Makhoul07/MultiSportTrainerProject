@@ -126,6 +126,10 @@ public class RegisterFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     AuthResponse authResponse = response.body();
 
+                    // Persist the JWT in case registration auto-logs the user in later.
+                    // (Today the user is sent to LoginFragment, so this is currently a no-op.)
+                    SessionPreferences.saveToken(requireContext(), authResponse.getToken());
+
                     Toast.makeText(
                             getContext(),
                             authResponse.getMessage() + ". Please login.",

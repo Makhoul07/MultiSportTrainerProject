@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MultiSportTrainerAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,24 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add controllers
 builder.Services.AddControllers();
+
+// JWT bearer authentication
+var jwt = builder.Configuration.GetSection("Jwt");
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwt["Issuer"],
+            ValidAudience = jwt["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwt["Key"]!))
+        };
+    });
 
 // Enable Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -39,6 +60,7 @@ app.UseCors("AllowAll");
 // For Android local testing, HTTP is easier than HTTPS
 // app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

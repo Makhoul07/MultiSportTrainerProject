@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MultiSportTrainerAPI.Data;
 using MultiSportTrainerAPI.DTOs;
@@ -6,6 +7,7 @@ using MultiSportTrainerAPI.Models;
 
 namespace MultiSportTrainerAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ResultsController : ControllerBase

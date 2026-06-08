@@ -18,6 +18,7 @@ public final class SessionPreferences {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_ROLE = "role";
     private static final String KEY_SPORT_FOCUS = "sportFocus";
+    private static final String KEY_TOKEN = "token";
     private static final String KEY_LAST_TAB = "lastTab";
 
     private SessionPreferences() {
@@ -75,6 +76,19 @@ public final class SessionPreferences {
 
     public static String getSportFocus(Context context) {
         return prefs(context).getString(KEY_SPORT_FOCUS, "");
+    }
+
+    /** Persist the JWT bearer token used to authenticate API requests. */
+    public static void saveToken(Context context, String token) {
+        prefs(context).edit().putString(KEY_TOKEN, token).apply();
+    }
+
+    public static String getToken(Context context) {
+        return prefs(context).getString(KEY_TOKEN, "");
+    }
+
+    public static void clearToken(Context context) {
+        prefs(context).edit().remove(KEY_TOKEN).apply();
     }
 
     /** Remember the bottom-nav tab the user is on, to restore it on next launch. */

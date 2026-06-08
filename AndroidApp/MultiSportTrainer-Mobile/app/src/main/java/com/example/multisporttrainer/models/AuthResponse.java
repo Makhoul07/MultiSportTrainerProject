@@ -7,6 +7,7 @@ public class AuthResponse {
     private String email;
     private String role;
     private String sportFocus;
+    private String token;
     private String message;
 
     public int getUserId() {
@@ -27,6 +28,10 @@ public class AuthResponse {
 
     public String getSportFocus() {
         return sportFocus;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public String getMessage() {
