@@ -6,6 +6,8 @@ from session_logger import save_session
 from email_notifier import send_training_result_email
 from config import *
 
+import lcd_display
+
 from mqtt_handler import (
     connect_mqtt,
     publish_message,
@@ -105,6 +107,8 @@ def finish_training():
 
     save_session(final_result)
 
+    lcd_display.show_finished(current_score, accuracy)
+
     send_training_result_email(
         to_email=current_session.get("email", ""),
         player_name=current_session["player"],
@@ -137,6 +141,11 @@ def process_next_cone():
 
     if distraction_cone not in REAL_CONES:
         distraction_cone = None
+
+    lcd_display.show_round(
+        current_session["index"] + 1,
+        len(current_session["route"])
+    )
 
     publish_message(
         TOPIC_EVENT,
@@ -179,6 +188,8 @@ def handle_real_cone_result(data):
 
         print(f"Real Cone {cone} correct")
 
+        lcd_display.show_correct()
+
     else:
         mistakes += 1
 
@@ -188,6 +199,8 @@ def handle_real_cone_result(data):
         )
 
         print(f"Real Cone {cone} wrong")
+
+        lcd_display.show_wrong()
 
     waiting_for_real_cone = False
     current_session["index"] += 1
@@ -246,6 +259,8 @@ def start_training(data):
         "index": 0
     }
 
+    lcd_display.show_ready()
+
     print("\n=== 3-CONE PRACTICE STARTED ===")
     print("Player:", player)
     print("Mode:", mode)
@@ -288,6 +303,8 @@ def on_message(client, userdata, msg):
 
 
 mqtt_client = connect_mqtt()
+
+lcd_display.init_lcd()
 
 subscribe_topic(
     TOPIC_COMMAND,
