@@ -90,6 +90,7 @@ def finish_training():
         "user_id": current_session.get("user_id", -1),
         "player": current_session["player"],
         "mode": current_session["mode"],
+        "original_route_type": current_session.get("original_route_type"),
         "difficulty": current_session.get("difficulty"),
         "rounds": len(current_session["route"]),
         "route": current_session["route"],
@@ -117,7 +118,7 @@ def finish_training():
         mistakes=mistakes,
         duration_seconds=duration_seconds,
         difficulty=current_session.get("difficulty"),
-        route_type=current_session.get("mode"),
+        route_type=current_session.get("original_route_type"),
     )
 
     print("\n=== TRAINING FINISHED ===")
@@ -248,12 +249,18 @@ def start_training(data):
         print("Invalid mode received")
         return
 
+    # The user's original selection ("custom_route"/"generated_route"). AI routes
+    # arrive as mode "custom_route" (the Pi follows the explicit sequence), so this
+    # preserves the real choice for the result/email. Falls back to mode if absent.
+    original_route_type = data.get("original_route_type") or mode
+
     current_session = {
         "session_id": session_id,
         "user_id": user_id,
         "email": email,
         "player": player,
         "mode": mode,
+        "original_route_type": original_route_type,
         "difficulty": difficulty,
         "route": route,
         "index": 0

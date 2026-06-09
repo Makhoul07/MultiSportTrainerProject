@@ -46,7 +46,11 @@ public final class MqttMessages {
      * @param email      user's email (SessionManager.loggedInEmail); used by the
      *                   IoT email notifier to send the results summary
      * @param player     display name; required by the simulator (never empty)
-     * @param mode       MODE_CUSTOM or MODE_GENERATED
+     * @param mode               MODE_CUSTOM or MODE_GENERATED (what the Pi runs)
+     * @param originalRouteType  the user's original selection (MODE_CUSTOM or
+     *                           MODE_GENERATED), preserved even when an AI-generated
+     *                           route is run as "custom_route" on the Pi. Falls back
+     *                           to {@code mode} when null/empty.
      * @param difficulty easy/medium/hard
      * @param rounds     number of rounds
      * @param route      cone sequence (CurrentTrainingData.coneSequence)
@@ -56,6 +60,7 @@ public final class MqttMessages {
                                            String email,
                                            String player,
                                            String mode,
+                                           String originalRouteType,
                                            String difficulty,
                                            int rounds,
                                            List<Integer> route) throws JSONException {
@@ -66,6 +71,10 @@ public final class MqttMessages {
         cmd.put("email", email == null ? "" : email);
         cmd.put("player", (player == null || player.trim().isEmpty()) ? "Guest" : player);
         cmd.put("mode", mode);
+        cmd.put("original_route_type",
+                (originalRouteType == null || originalRouteType.trim().isEmpty())
+                        ? mode
+                        : originalRouteType);
         cmd.put("difficulty", difficulty == null ? "medium" : difficulty.toLowerCase());
         cmd.put("rounds", rounds);
 

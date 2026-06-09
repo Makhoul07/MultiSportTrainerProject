@@ -22,7 +22,12 @@ def _format_duration(duration_seconds):
 
 
 def _pretty_route_type(route_type):
-    mapping = {"custom_route": "Custom", "generated_route": "Generated"}
+    mapping = {
+        "custom_route": "Custom Route",
+        "generated_route": "AI Generated Route",
+        "Custom": "Custom Route",
+        "Generated": "AI Generated Route",
+    }
     return mapping.get(route_type, str(route_type or "Unknown"))
 
 

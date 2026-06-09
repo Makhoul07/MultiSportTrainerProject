@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.multisporttrainer.api.ApiService;
 import com.example.multisporttrainer.api.RetrofitClient;
+import com.example.multisporttrainer.mqtt.MqttMessages;
 import com.example.multisporttrainer.models.SaveRouteRequest;
 import com.example.multisporttrainer.models.SaveRouteResponse;
 import com.example.multisporttrainer.models.StartTrainingRequest;
@@ -184,6 +185,7 @@ public class CustomRouteFragment extends Fragment {
 
         // Everything the live MQTT session needs is fixed here, before we navigate.
         CurrentTrainingData.routeType = "Custom";
+        CurrentTrainingData.originalRouteType = MqttMessages.MODE_CUSTOM;
         CurrentTrainingData.difficulty = difficulty;
         CurrentTrainingData.conesCount = 3;
         CurrentTrainingData.rounds = selectedRoute.size();

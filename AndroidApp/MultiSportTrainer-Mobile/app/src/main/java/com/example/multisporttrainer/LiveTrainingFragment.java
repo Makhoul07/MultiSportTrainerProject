@@ -120,6 +120,7 @@ public class LiveTrainingFragment extends Fragment implements MqttTrainingListen
                         SessionManager.loggedInEmail,
                         player,
                         mode,
+                        CurrentTrainingData.originalRouteType,
                         CurrentTrainingData.difficulty == null
                                 ? "medium"
                                 : CurrentTrainingData.difficulty.toLowerCase(),

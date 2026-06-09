@@ -55,6 +55,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         private final TextView trainingType;
         private final TextView date;
+        private final TextView routeType;
         private final TextView difficulty;
         private final TextView score;
         private final TextView accuracy;
@@ -65,6 +66,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             super(itemView);
             trainingType = itemView.findViewById(R.id.item_training_type);
             date = itemView.findViewById(R.id.item_date);
+            routeType = itemView.findViewById(R.id.item_route_type);
             difficulty = itemView.findViewById(R.id.item_difficulty);
             score = itemView.findViewById(R.id.item_score);
             accuracy = itemView.findViewById(R.id.item_accuracy);
@@ -75,6 +77,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         void bind(HistoryResponse item, OnRetryClickListener retryListener) {
             trainingType.setText(item.getTrainingType());
             date.setText("▣ " + formatDate(item.getCreatedAt()));
+            routeType.setText(prettyRouteType(item.getRouteType()));
             difficulty.setText(safeUpper(item.getDifficulty()));
             score.setText(String.valueOf(item.getScore()));
             accuracy.setText(String.format(Locale.US, "%.0f%%", item.getAccuracy()));
@@ -89,6 +92,21 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         private String safeUpper(String value) {
             return value == null ? "" : value.toUpperCase(Locale.US);
+        }
+
+        /** Render the stored route type as a readable label. */
+        private String prettyRouteType(String value) {
+            if (value == null) {
+                return "";
+            }
+            String normalized = value.trim().toLowerCase(Locale.US);
+            if (normalized.startsWith("gen")) {
+                return "Generated Route";
+            }
+            if (normalized.startsWith("cus")) {
+                return "Custom Route";
+            }
+            return value;
         }
 
         private String formatDate(String createdAt) {

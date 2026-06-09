@@ -19,6 +19,7 @@ import com.example.multisporttrainer.models.SaveRouteRequest;
 import com.example.multisporttrainer.models.SaveRouteResponse;
 import com.example.multisporttrainer.models.StartTrainingRequest;
 import com.example.multisporttrainer.models.StartTrainingResponse;
+import com.example.multisporttrainer.mqtt.MqttMessages;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -164,6 +165,9 @@ public class GeneratedRouteFragment extends Fragment {
      */
     private void startWithRoute(String difficulty, List<Integer> sequence) {
         CurrentTrainingData.routeType = "Custom";
+        // Sent to the Pi as "Custom" (explicit sequence), but the user's real
+        // choice was the AI-generated route — preserve that for results/history.
+        CurrentTrainingData.originalRouteType = MqttMessages.MODE_GENERATED;
         CurrentTrainingData.difficulty = difficulty;
         CurrentTrainingData.conesCount = 3;
         CurrentTrainingData.rounds = sequence.size();

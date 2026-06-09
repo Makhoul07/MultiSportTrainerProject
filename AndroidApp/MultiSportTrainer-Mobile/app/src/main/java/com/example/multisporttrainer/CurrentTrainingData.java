@@ -8,6 +8,9 @@ public class CurrentTrainingData {
     public static int sessionId = -1;
 
     public static String routeType = "Custom";
+    // The user's original selection ("custom_route"/"generated_route"), preserved
+    // even when an AI-generated route is sent to the Pi as routeType "Custom".
+    public static String originalRouteType = "custom_route";
     public static String difficulty = "Medium";
     public static String trainingType = "Football Dribbling";
 
@@ -29,6 +32,7 @@ public class CurrentTrainingData {
         sessionId = -1;
 
         routeType = "Custom";
+        originalRouteType = "custom_route";
         difficulty = "Medium";
         trainingType = "Football Dribbling";
 
