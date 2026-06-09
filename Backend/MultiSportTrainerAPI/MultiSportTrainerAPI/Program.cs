@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MultiSportTrainerAPI.Data;
+using MultiSportTrainerAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add controllers
 builder.Services.AddControllers();
+
+// Calls the Claude API server-side for AI-generated routes (key stays on the server)
+builder.Services.AddSingleton<ClaudeRouteService>();
 
 // JWT bearer authentication
 var jwt = builder.Configuration.GetSection("Jwt");

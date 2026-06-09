@@ -1,6 +1,8 @@
 package com.example.multisporttrainer.api;
 
 import com.example.multisporttrainer.models.AuthResponse;
+import com.example.multisporttrainer.models.GenerateRouteRequest;
+import com.example.multisporttrainer.models.GenerateRouteResponse;
 import com.example.multisporttrainer.models.HistoryResponse;
 import com.example.multisporttrainer.models.LatestResultResponse;
 import com.example.multisporttrainer.models.LeaderboardResponse;
@@ -59,6 +61,9 @@ public interface ApiService {
 
     @POST("api/Routes/save")
     Call<SaveRouteResponse> saveRoute(@Body SaveRouteRequest request);
+
+    @POST("api/Routes/generate")
+    Call<GenerateRouteResponse> generateRoute(@Body GenerateRouteRequest request);
 
     @POST("api/Results/save")
     Call<SaveResultResponse> saveResult(@Body SaveResultRequest request);
