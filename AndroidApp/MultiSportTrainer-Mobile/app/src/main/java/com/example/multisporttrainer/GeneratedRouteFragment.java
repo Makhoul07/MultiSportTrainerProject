@@ -182,9 +182,17 @@ public class GeneratedRouteFragment extends Fragment {
     private void createSessionThenSaveRoute() {
         setBusy(true, "Starting...");
 
+        // The Pi still runs this as a "Custom" route (explicit sequence), but the
+        // backend session should record the user's real choice. Store "Generated"
+        // for AI routes so history/stats reflect it; "Custom" otherwise.
+        String backendRouteType =
+                MqttMessages.MODE_GENERATED.equals(CurrentTrainingData.originalRouteType)
+                        ? "Generated"
+                        : CurrentTrainingData.routeType;
+
         StartTrainingRequest request = new StartTrainingRequest(
                 SessionManager.loggedInUserId,
-                CurrentTrainingData.routeType,
+                backendRouteType,
                 CurrentTrainingData.difficulty,
                 CurrentTrainingData.trainingType,
                 CurrentTrainingData.conesCount,
